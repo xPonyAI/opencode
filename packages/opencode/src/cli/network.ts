@@ -38,6 +38,10 @@ export async function resolveNetworkOptions(args: NetworkOptions) {
   const mdnsExplicitlySet = process.argv.includes("--mdns")
   const corsExplicitlySet = process.argv.includes("--cors")
 
+  // 获取参数的顺序：
+  // 1. 命令行显式参数 --port 3333
+  //    2. > config.json
+  //        3. > CLI 默认值
   const mdns = mdnsExplicitlySet ? args.mdns : (config?.server?.mdns ?? args.mdns)
   const port = portExplicitlySet ? args.port : (config?.server?.port ?? args.port)
   const hostname = hostnameExplicitlySet

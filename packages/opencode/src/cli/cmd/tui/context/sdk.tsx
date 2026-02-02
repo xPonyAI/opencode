@@ -7,14 +7,19 @@ export type EventSource = {
   on: (handler: (event: Event) => void) => () => void
 }
 
+// 通过 createSimpleContext 来创建 useSDK 和 SDKProvider
+// 通过对组件包装 <SDKProvider><App /></SDKProvider> 自动初始化这里的 init() 函数的返回值作为上下文的对象
+// 然后通过 useSDK 可以获取初始化的对象
 export const { use: useSDK, provider: SDKProvider } = createSimpleContext({
   name: "SDK",
+  // events 是 RPC worker 中 on("event") 的事件源
   init: (props: { url: string; directory?: string; fetch?: typeof fetch; events?: EventSource }) => {
     const abort = new AbortController()
     const sdk = createOpencodeClient({
       baseUrl: props.url,
       signal: abort.signal,
       directory: props.directory,
+      // props.fetch = customFetch
       fetch: props.fetch,
     })
 
@@ -45,6 +50,7 @@ export const { use: useSDK, provider: SDKProvider } = createSimpleContext({
       const elapsed = Date.now() - last
 
       if (timer) return
+      // 如果最近刚刷新过（16毫秒内），则将此事件与未来的事件一起批量处理。否则，立即处理以避免延迟。
       // If we just flushed recently (within 16ms), batch this with future events
       // Otherwise, process immediately to avoid latency
       if (elapsed < 16) {

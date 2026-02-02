@@ -126,6 +126,9 @@ export function tui(input: {
                 <KVProvider>
                   <ToastProvider>
                     <RouteProvider>
+                      {/**
+                       * 把 fetch, events 传递给 SDKProvider
+                       */}
                       <SDKProvider
                         url={input.url}
                         directory={input.directory}

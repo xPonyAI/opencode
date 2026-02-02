@@ -108,6 +108,8 @@ export const rpc = {
       headers,
       body: input.body,
     })
+    // Server.App() 如果之前有初始化，那直接会拿到 instance 实例
+    // 默认的 fetch 方法是通过 Hono instance 通过 http 接口访问
     const response = await Server.App().fetch(request)
     const body = await response.text()
     return {

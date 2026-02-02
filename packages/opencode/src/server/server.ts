@@ -55,6 +55,9 @@ export namespace Server {
   }
 
   const app = new Hono()
+  // Server.App() 初始化 Hono 的路由 + Middleware
+  // 1. 可以用 Bun.server(...) 来启动一个 HttpServer
+  // 2. 也可以直接 Server.App().fetch(...) 直接进程内调用，配合 RPC 做到本地 RPC 调用
   export const App: () => Hono = lazy(
     () =>
       // TODO: Break server.ts into smaller route files to fix type inference
@@ -530,6 +533,7 @@ export namespace Server {
     return result
   }
 
+  // 启动 Http Server 服务
   export function listen(opts: { port: number; hostname: string; mdns?: boolean; cors?: string[] }) {
     _corsWhitelist = opts.cors ?? []
 
