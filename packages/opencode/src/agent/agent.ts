@@ -29,13 +29,16 @@ export namespace Agent {
       topP: z.number().optional(),
       temperature: z.number().optional(),
       color: z.string().optional(),
+      // 安全策略
       permission: PermissionNext.Ruleset,
+      // model 特定覆盖的模型
       model: z
         .object({
           modelID: z.string(),
           providerID: z.string(),
         })
         .optional(),
+      // 系统提示词
       prompt: z.string().optional(),
       options: z.record(z.string(), z.any()),
       steps: z.number().int().positive().optional(),
@@ -48,6 +51,7 @@ export namespace Agent {
   const state = Instance.state(async () => {
     const cfg = await Config.get()
 
+    // 定义默认权限
     const defaults = PermissionNext.fromConfig({
       "*": "allow",
       doom_loop: "ask",
@@ -67,9 +71,13 @@ export namespace Agent {
         "*.env.example": "allow",
       },
     })
+
+    // 读取用户权限
     const user = PermissionNext.fromConfig(cfg.permission ?? {})
 
+    // results 中内置了一些 agent 的权限设定
     const result: Record<string, Info> = {
+      // build Agent 的权限设定
       build: {
         name: "build",
         options: {},
@@ -84,6 +92,7 @@ export namespace Agent {
         mode: "primary",
         native: true,
       },
+      // plan Agent，架构师，专门管理 .opencode/plan/*.md 文件。它负责创建和更新实施计划，但不能直接修改源代码
       plan: {
         name: "plan",
         options: {},
@@ -121,6 +130,7 @@ export namespace Agent {
         mode: "subagent",
         native: true,
       },
+      // explore Agent 的权限定义
       explore: {
         name: "explore",
         permission: PermissionNext.merge(

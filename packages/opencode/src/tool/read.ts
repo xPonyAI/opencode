@@ -15,6 +15,7 @@ const MAX_BYTES = 50 * 1024
 
 export const ReadTool = Tool.define("read", {
   description: DESCRIPTION,
+  // 使用 Zod 定义输入参数，自动生成 JSON Schema
   parameters: z.object({
     filePath: z.string().describe("The path to the file to read"),
     offset: z.coerce.number().describe("The line number to start reading from (0-based)").optional(),
@@ -31,6 +32,8 @@ export const ReadTool = Tool.define("read", {
       bypass: Boolean(ctx.extra?.["bypassCwdCheck"]),
     })
 
+    // 动态权限申请，这是一个阻塞调用
+    // 如果用户在 opencode.json 中配置了 "ask"，CLI 会在这里暂停等待用户 Y/N
     await ctx.ask({
       permission: "read",
       patterns: [filepath],
@@ -38,6 +41,7 @@ export const ReadTool = Tool.define("read", {
       metadata: {},
     })
 
+    // 执行逻辑
     const file = Bun.file(filepath)
     if (!(await file.exists())) {
       const dir = path.dirname(filepath)

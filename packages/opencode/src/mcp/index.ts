@@ -118,6 +118,7 @@ export namespace MCP {
 
   // Convert MCP tool definition to AI SDK Tool type
   async function convertMcpTool(mcpTool: MCPToolDef, client: MCPClient, timeout?: number): Promise<Tool> {
+    // 获取 MCP 定义的 Input Schema
     const inputSchema = mcpTool.inputSchema
 
     // Spread first, then override type to ensure it's always "object"
@@ -128,6 +129,7 @@ export namespace MCP {
       additionalProperties: false,
     }
 
+    // 包装成 vercel 开发的 AI SDK 中的 dynamicTool 函数
     return dynamicTool({
       description: mcpTool.description ?? "",
       inputSchema: jsonSchema(schema),
