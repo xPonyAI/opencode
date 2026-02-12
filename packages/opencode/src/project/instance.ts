@@ -11,6 +11,10 @@ interface Context {
   worktree: string
   project: Project.Info
 }
+
+// 创建 AsyncLocalStorage 的 context 对象 { use(), provide() }
+// 在 provide 的时候传入参数<Context>和函数，那么在整个函数的异步调用链路中，都可以
+// 通过 use() 来获取当初传入的参数
 const context = Context.create<Context>("instance")
 const cache = new Map<string, Promise<Context>>()
 

@@ -70,6 +70,13 @@ export const McpListCommand = cmd({
   async handler() {
     await Instance.provide({
       directory: process.cwd(),
+      // 没有 init() 函数，只有 fn 函数，fn 函数是执行函数，
+      // fn 整个调用链上都可以使用 instance.ts 中返回的 ctx 参数
+      // ctx = {
+      //    directory: input.directory,
+      //    worktree: sandbox,
+      //    project: project
+      // }
       async fn() {
         UI.empty()
         prompts.intro("MCP Servers")

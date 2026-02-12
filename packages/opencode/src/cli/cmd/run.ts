@@ -261,6 +261,7 @@ export const RunCommand = cmd({
           variant: args.variant,
         })
       } else {
+        // args.model 指定运行的模型
         const modelParam = args.model ? Provider.parseModel(args.model) : undefined
         await sdk.session.prompt({
           sessionID,
@@ -276,6 +277,7 @@ export const RunCommand = cmd({
     }
 
     if (args.attach) {
+      console.log(args.attach)
       const sdk = createOpencodeClient({ baseUrl: args.attach })
 
       const sessionID = await (async () => {
@@ -337,6 +339,8 @@ export const RunCommand = cmd({
 
       return await execute(sdk, sessionID)
     }
+
+    console.log("bootstrap = ", process.cwd())
 
     await bootstrap(process.cwd(), async () => {
       const fetchFn = (async (input: RequestInfo | URL, init?: RequestInit) => {

@@ -1072,7 +1072,6 @@ export namespace Provider {
       const suggestions = matches.map((m) => m.target)
       throw new ModelNotFoundError({ providerID, modelID, suggestions })
     }
-
     const info = provider.models[modelID]
     if (!info) {
       const availableModels = Object.keys(provider.models)

@@ -97,9 +97,11 @@ function init() {
       setSuspendCount((count) => count + (enabled ? -1 : 1))
     },
     suspended,
+    // 弹出对话框
     show() {
       dialog.replace(() => <DialogCommand options={visibleOptions()} suggestedOptions={suggestedOptions()} />)
     },
+    // 注册命令，如：/mcps, /agents, /sessions
     register(cb: () => CommandOption[]) {
       const results = createMemo(cb)
       setRegistrations((arr) => [results, ...arr])
